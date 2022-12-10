@@ -1,4 +1,4 @@
-local addonName = 'Better Ragdoll\'s'
+local addonName = 'Better Ragdolls'
 
 -- gLua Refresh Protection
 pAddons = pAddons or {}
