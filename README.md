@@ -1,1 +1,1 @@
-# Better Player Ragdolls
+# Improved Player Ragdolls
