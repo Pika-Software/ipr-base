@@ -24,9 +24,13 @@ end
 
 if (SERVER) then
 
+	local util_IsValidModel = util.IsValidModel
 	local ents_Create = ents.Create
 	local hook_Add = hook.Add
 	local hook_Run = hook.Run
+	local isstring = isstring
+	local isnumber = isnumber
+	local istable = istable
 	local IsValid = IsValid
 	local ipairs = ipairs
 
@@ -48,20 +52,47 @@ if (SERVER) then
 	end
 
 	function PLAYER:CreateRagdoll()
-		-- Removing old ragdoll (if exists)
 		self:RemoveRagdoll()
 
-		local ent = ents_Create( self:GetBoneCount() > 1 and 'prop_ragdoll' or 'prop_physics' )
+		local ent = NULL
+		local ragdollClass = hook_Run( 'PlayerRagdollClass', self )
+		if isstring( ragdollClass ) then
+			ent = ents_Create( ragdollClass )
+		else
+			ent = ents_Create( self:GetBoneCount() > 1 and 'prop_ragdoll' or 'prop_physics' )
+		end
+
 		if IsValid( ent ) then
 			ent:SetCreator( self )
 
 			-- Model
-			ent:SetModel( self:GetModel() )
-			ent:SetSkin( self:GetSkin() )
+			local model = hook_Run( 'PlayerRagdollModel', self )
+			if isstring( model ) and util_IsValidModel( model ) then
+				ent:SetModel( model )
+			elseif (model ~= false) then
+				ent:SetModel( self:GetModel() )
+			else
+				return
+			end
+
+			-- Skin
+			local modelSkin = hook_Run( 'PlayerRagdollSkin', self )
+			if isnumber( modelSkin ) then
+				ent:SetSkin( modelSkin )
+			elseif (modelSkin ~= false) then
+				ent:SetSkin( self:GetSkin() )
+			end
 
 			-- Bodygroups
-			for _, bodygroup in ipairs( self:GetBodyGroups() ) do
-				ent:SetBodygroup( bodygroup.id, self:GetBodygroup( bodygroup.id ) )
+			local modelBodygroups = hook_Run( 'PlayerRagdollBodyGroups', self )
+			if istable( modelBodygroups ) then
+				for _, bodygroup in ipairs( modelBodygroups ) do
+					ent:SetBodygroup( bodygroup.id, bodygroup.value )
+				end
+			elseif (modelBodygroups ~= false) then
+				for _, bodygroup in ipairs( self:GetBodyGroups() ) do
+					ent:SetBodygroup( bodygroup.id, self:GetBodygroup( bodygroup.id ) )
+				end
 			end
 
 			-- Flexes
