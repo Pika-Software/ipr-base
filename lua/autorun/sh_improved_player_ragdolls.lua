@@ -66,7 +66,7 @@ if (SERVER) then
 			ent:SetCreator( self )
 
 			-- Model
-			local model = hook_Run( 'PlayerRagdollModel', self )
+			local model = hook_Run( 'PlayerRagdollModel', self, ent )
 			if isstring( model ) and util_IsValidModel( model ) then
 				ent:SetModel( model )
 			elseif (model ~= false) then
@@ -76,7 +76,7 @@ if (SERVER) then
 			end
 
 			-- Skin
-			local modelSkin = hook_Run( 'PlayerRagdollSkin', self )
+			local modelSkin = hook_Run( 'PlayerRagdollSkin', self, ent )
 			if isnumber( modelSkin ) then
 				ent:SetSkin( modelSkin )
 			elseif (modelSkin ~= false) then
@@ -84,7 +84,7 @@ if (SERVER) then
 			end
 
 			-- Bodygroups
-			local modelBodygroups = hook_Run( 'PlayerRagdollBodyGroups', self )
+			local modelBodygroups = hook_Run( 'PlayerRagdollBodyGroups', self, ent )
 			if istable( modelBodygroups ) then
 				for _, bodygroup in ipairs( modelBodygroups ) do
 					ent:SetBodygroup( bodygroup.id, bodygroup.value )
