@@ -156,11 +156,12 @@ if (SERVER) then
 
 			-- Spectating :
 			if IsValid( self:GetObserverTarget() ) then
-				return
+				return ent
 			end
 
 			self:SpectateEntity( ent )
 			self:Spectate( OBS_MODE_CHASE )
+			return ent
 		end
 	end
 
