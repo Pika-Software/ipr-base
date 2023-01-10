@@ -1,10 +1,5 @@
 local addonName = 'Improved Player Ragdolls'
 
--- gLua Refresh Protection
-pAddons = pAddons or {}
-if pAddons[ addonName ] then return end
-pAddons[ addonName ] = true
-
 local PLAYER = FindMetaTable( 'Player' )
 function PLAYER:GetRagdollEntity()
 	return self:GetNW2Entity( 'm_Ragdoll' )
@@ -63,6 +58,7 @@ if (SERVER) then
 		end
 
 		if IsValid( ent ) then
+			ent.PlayerRagdoll = true
 			ent:SetCreator( self )
 
 			-- Model
@@ -118,7 +114,7 @@ if (SERVER) then
 			ent:Spawn()
 
 			-- Bone Manipulations
-			for i = 0, self:GetBoneCount() do
+			for i = 0, ent:GetBoneCount() do
 				ent:ManipulateBonePosition( i, self:GetManipulateBonePosition( i ) )
 				ent:ManipulateBoneAngles( i, self:GetManipulateBoneAngles( i ) )
 				ent:ManipulateBoneJiggle( i, self:GetManipulateBoneJiggle( i ) )
