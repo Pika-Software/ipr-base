@@ -17,6 +17,10 @@ function ENTITY:SetPlayerColor( vec )
 	self:SetNWVector( 'm_PlayerColor', vec )
 end
 
+function ENTITY:IsPlayerRagdoll()
+	return self:GetNWBool( 'PlayerRagdoll', false )
+end
+
 if (SERVER) then
 
 	local util_IsValidModel = util.IsValidModel
@@ -58,7 +62,7 @@ if (SERVER) then
 		end
 
 		if IsValid( ent ) then
-			ent.PlayerRagdoll = true
+			ent:SetNWBool( 'PlayerRagdoll', true )
 			ent:SetCreator( self )
 
 			-- Model
