@@ -154,23 +154,13 @@ if (SERVER) then
 			-- Active Weapon
 			local activeWeapon = self:GetActiveWeapon()
 			if IsValid( activeWeapon ) then
-				ent.ActiveWeaponClass = activeWeapon:GetClass()
-				ent.ActiveWeapon = activeWeapon
+				ent.ActiveWeapon = activeWeapon:GetClass()
 			end
 
 			-- Weapons
 			ent.Weapons = {}
-
 			for _, wep in ipairs( self:GetWeapons() ) do
-				ent.Weapons[ wep:GetClass() ] = wep
-				self:DropWeapon( wep )
-
-				-- Weapon locking
-				wep:SetCollisionGroup( 12 )
-				wep:SetPos( ent:GetPos() )
-				wep:DrawShadow( false )
-				wep:SetNoDraw( true )
-				wep:SetParent( ent )
+				table.insert( ent.Weapons, wep:GetClass() )
 			end
 
 			-- Hook for dev's
