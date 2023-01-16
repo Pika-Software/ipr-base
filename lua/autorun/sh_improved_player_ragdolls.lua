@@ -186,4 +186,27 @@ if (SERVER) then
 		ply:RemoveRagdoll()
 	end)
 
+	-- gmod_cameraprop ragdoll support
+	do
+		local ents_FindByClass = ents.FindByClass
+		timer.Create(addonName .. ' - Camera Fix', 0.5, 0, function()
+			for _, ent in ipairs( ents_FindByClass( 'gmod_cameraprop' ) ) do
+				local ply = ent.TargetPlayer
+				local tEnt = ent:GetentTrack()
+				if IsValid( ply ) and ply:Alive() then
+					if (ply == tEnt) then continue end
+					ent:SetentTrack( ply )
+				elseif IsValid( tEnt ) and tEnt:IsPlayer() then
+					if tEnt:Alive() then continue end
+
+					local ragdoll = tEnt:GetRagdollEntity()
+					if IsValid( ragdoll ) then
+						ent.TargetPlayer = tEnt
+						ent:SetentTrack( ragdoll )
+					end
+				end
+			end
+		end)
+	end
+
 end
