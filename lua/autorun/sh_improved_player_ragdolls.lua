@@ -163,6 +163,12 @@ if (SERVER) then
 				table.insert( ent.Weapons, wep:GetClass() )
 			end
 
+			-- Fire Transmission
+			if self:IsOnFire() then
+				self:Extinguish()
+				ent:Ignite( 10, 0 )
+			end
+
 			-- Hook for dev's
 			hook_Run( 'PlayerRagdollCreated', self, ent )
 
