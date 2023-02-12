@@ -187,9 +187,12 @@ if (SERVER) then
 		ply:RemoveRagdoll()
 	end)
 
+	local removeOnSpawn = CreateConVar( 'ipr_remove_on_spawn', '1', FCVAR_ARCHIVE, ' - If 1, player ragdolls will be removed when the player is respawned.', 0, 1 )
 	hook_Add('PlayerSpawn', addonName, function( ply, trans )
 		if (trans) then return end
-		ply:RemoveRagdoll()
+		if removeOnSpawn:GetBool() then
+			ply:RemoveRagdoll()
+		end
 	end)
 
 	-- gmod_cameraprop ragdoll support
