@@ -202,3 +202,5 @@ end )
 hook.Add( "DoPlayerDeath", addonName, function( ply, _, damageInfo )
     ply:SetVelocity( -damageInfo:GetDamageForce() )
 end )
+
+hook.Run( "IPR - Initialized" )
