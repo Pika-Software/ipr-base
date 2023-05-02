@@ -192,7 +192,7 @@ timer.Create( addonName .. "/Camera Fix", 0.5, 0, function()
     end
 end )
 
-local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, " - If 1, player ragdolls will be removed when the player is respawned.", 0, 1 )
+local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, "If 1, player ragdolls will be removed when the player is respawned.", 0, 1 )
 
 hook.Add( "PlayerSpawn", addonName, function( ply, _ )
     if not removeOnSpawn:GetBool() then return end
