@@ -20,3 +20,7 @@ end
 function PLAYER:GetRagdollEntity()
     return self:GetNW2Entity( "improved-player-ragdolls", NULL )
 end
+
+if SERVER then
+    include( "server.lua" )
+end

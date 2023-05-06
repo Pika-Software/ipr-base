@@ -1,4 +1,4 @@
-local addonName = "IPR - Base"
+local packageName = gpm.Package:GetIdentifier()
 
 -- Metatables
 local PLAYER = FindMetaTable( "Player" )
@@ -23,7 +23,7 @@ function PLAYER:RemoveRagdoll()
     return ent:Remove()
 end
 
-hook.Add( "PlayerDisconnected", addonName, PLAYER.RemoveRagdoll )
+hook.Add( "PlayerDisconnected", packageName, PLAYER.RemoveRagdoll )
 
 do
 
@@ -169,9 +169,9 @@ function PLAYER:CreateRagdoll()
 end
 
 -- gmod_cameraprop ragdoll support
-timer.Create( addonName .. "/Camera Fix", 0.5, 0, function()
+timer.Create( packageName, 0.5, 0, function()
     for _, camera in ipairs( ents.FindByClass( "gmod_cameraprop" ) ) do
-        local ply, target = camera[ addonName ], camera:GetentTrack()
+        local ply, target = camera[ packageName ], camera:GetentTrack()
 
         if not ply then
             if not IsValid( target ) then continue end
@@ -181,25 +181,25 @@ timer.Create( addonName .. "/Camera Fix", 0.5, 0, function()
             local ragdoll = target:GetRagdollEntity()
             if not IsValid( ragdoll ) then continue end
             camera:SetentTrack( ragdoll )
-            camera[ addonName ] = target
+            camera[ packageName ] = target
             continue
         end
 
         if not IsValid( ply ) then continue end
         if not ply:Alive() then continue end
         camera:SetentTrack( ply )
-        camera[ addonName ] = nil
+        camera[ packageName ] = nil
     end
 end )
 
 local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, "If 1, player ragdolls will be removed when the player is respawned.", 0, 1 )
 
-hook.Add( "PlayerSpawn", addonName, function( ply, _ )
+hook.Add( "PlayerSpawn", packageName, function( ply, _ )
     if not removeOnSpawn:GetBool() then return end
     ply:RemoveRagdoll()
 end )
 
-hook.Add( "DoPlayerDeath", addonName, function( ply, _, damageInfo )
+hook.Add( "DoPlayerDeath", packageName, function( ply, _, damageInfo )
     ply:SetVelocity( -damageInfo:GetDamageForce() )
 end )
 
