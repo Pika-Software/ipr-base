@@ -1,15 +1,7 @@
+import( gpm.PackageExists( "packages/player-extensions" ) and "packages/player-extensions" or "https://github.com/Pika-Software/player-extensions" )
+
 local ENTITY, PLAYER = FindMetaTable( "Entity" ), FindMetaTable( "Player" )
 local NULL = NULL
-
--- Entity:GetPlayerColor()
-function ENTITY:GetPlayerColor()
-    return self:GetNW2Vector( "player-color", nil )
-end
-
--- Entity:SetPlayerColor( vector )
-function ENTITY:SetPlayerColor( vector )
-    self:SetNW2Vector( "player-color", vector )
-end
 
 -- Entity:IsPlayerRagdoll()
 function ENTITY:IsPlayerRagdoll()
