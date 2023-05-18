@@ -1,5 +1,3 @@
-import( gpm.PackageExists( "packages/player-extensions" ) and "packages/player-extensions" or "https://github.com/Pika-Software/player-extensions" )
-
 local ENTITY, PLAYER = FindMetaTable( "Entity" ), FindMetaTable( "Player" )
 local NULL = NULL
 

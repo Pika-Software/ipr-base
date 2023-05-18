@@ -1,3 +1,4 @@
+import( gpm.PackageExists( "packages/player-extensions" ) and "packages/player-extensions" or "https://github.com/Pika-Software/player-extensions" )
 local packageName = gpm.Package:GetIdentifier()
 
 -- Metatables
@@ -104,8 +105,8 @@ function PLAYER:CreateRagdoll()
     end
 
     -- Color
-    ent:SetColor( self:GetColor() )
     ent:SetPlayerColor( self:GetPlayerColor() )
+    ent:SetColor( self:GetColor() )
 
     -- Spawning
     ent:Spawn()
