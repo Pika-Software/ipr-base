@@ -1,7 +1,7 @@
-import( gpm.PackageExists( "packages/player-extensions" ) and "packages/player-extensions" or "https://github.com/Pika-Software/player-extensions" )
-local packageName = gpm.Package:GetIdentifier()
+require( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
 
--- Metatables
+-- Other
+local packageName = gpm.Package:GetIdentifier()
 local PLAYER = FindMetaTable( "Player" )
 
 -- Libraries
