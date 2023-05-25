@@ -108,9 +108,6 @@ function PLAYER:CreateRagdoll()
     ent:SetPlayerColor( self:GetPlayerColor() )
     ent:SetColor( self:GetColor() )
 
-    -- Owner
-    ent:SetOwner( self )
-
     -- Spawning
     ent:Spawn()
 
