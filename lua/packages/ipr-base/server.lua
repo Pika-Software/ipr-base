@@ -1,4 +1,4 @@
-require( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
+install( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
 
 -- Other
 local packageName = gpm.Package:GetIdentifier()
