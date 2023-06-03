@@ -162,8 +162,8 @@ function PLAYER:CreateRagdoll()
 
     -- Spectating :
     if not IsValid( self:GetObserverTarget() ) then
+        self:SetObserverMode( OBS_MODE_CHASE )
         self:SpectateEntity( ent )
-        self:Spectate( OBS_MODE_CHASE )
     end
 
     return ent
