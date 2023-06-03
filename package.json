@@ -1,7 +1,0 @@
-{
-    "name": "ipr-base",
-    "files": {
-        "lua/packages/ipr-base/package.lua": "https://raw.githubusercontent.com/Pika-Software/ipr-base/master/lua/packages/ipr-base/package.lua",
-        "lua/packages/ipr-base/init.lua": "https://raw.githubusercontent.com/Pika-Software/ipr-base/master/lua/packages/ipr-base/init.lua"
-    }
-}
