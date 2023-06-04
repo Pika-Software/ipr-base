@@ -1,4 +1,3 @@
 name = "ipr-base"
-main = "init.lua"
-version = 000500
+version = 000501
 autorun = true

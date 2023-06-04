@@ -1,7 +1,7 @@
 install( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
 
 -- Other
-local packageName = gpm.Package:GetIdentifier()
+local packageName = _PKG:GetIdentifier()
 local PLAYER = FindMetaTable( "Player" )
 
 -- Libraries
