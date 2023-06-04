@@ -17,11 +17,11 @@ local ipairs = ipairs
 local type = type
 
 function PLAYER:RemoveRagdoll()
-    local ent = self:GetRagdollEntity()
-    if not IsValid( ent ) then return end
+    local entity = self:GetRagdollEntity()
+    if not IsValid( entity ) then return end
 
-    hook.Run( "PlayerRagdollRemoved", self, ent )
-    return ent:Remove()
+    hook.Run( "PlayerRagdollRemoved", self, entity )
+    return entity:Remove()
 end
 
 hook.Add( "PlayerDisconnected", packageName, PLAYER.RemoveRagdoll )
@@ -45,96 +45,96 @@ function PLAYER:CreateRagdoll()
     if ragdollClass == false then return end
 
     -- Creating
-    local ent = nil
+    local entity = nil
     if type( ragdollClass ) == "string" then
-        ent = ents.Create( ragdollClass )
+        entity = ents.Create( ragdollClass )
     else
-        ent = ents.Create( self:GetBoneCount() > 1 and "prop_ragdoll" or "prop_physics" )
+        entity = ents.Create( self:GetBoneCount() > 1 and "prop_ragdoll" or "prop_physics" )
     end
 
-    if not IsValid( ent ) then return end
+    if not IsValid( entity ) then return end
 
     -- Position & angles
-    ent:SetPos( self:GetPos() )
-    ent:SetAngles( self:GetAngles() )
+    entity:SetPos( self:GetPos() )
+    entity:SetAngles( self:GetAngles() )
 
     -- Model
-    local model = hook.Run( "PlayerRagdollModel", self, ent )
+    local model = hook.Run( "PlayerRagdollModel", self, entity )
     if type( model ) == "string" then
         if not util.IsValidModel( model ) then return end
-        ent:SetModel( model )
+        entity:SetModel( model )
     else
-        ent:SetModel( self:GetModel() )
+        entity:SetModel( self:GetModel() )
     end
 
     -- Skin
-    local modelSkin = hook.Run( "PlayerRagdollSkin", self, ent )
+    local modelSkin = hook.Run( "PlayerRagdollSkin", self, entity )
     if type( modelSkin ) == "number" then
-        ent:SetSkin( modelSkin )
+        entity:SetSkin( modelSkin )
     elseif modelSkin ~= false then
-        ent:SetSkin( self:GetSkin() )
+        entity:SetSkin( self:GetSkin() )
     end
 
     -- Bodygroups
-    local modelBodygroups = hook.Run( "PlayerRagdollBodyGroups", self, ent )
+    local modelBodygroups = hook.Run( "PlayerRagdollBodyGroups", self, entity )
     if type( modelBodygroups ) == "table" then
         for _, bodygroup in ipairs( modelBodygroups ) do
-            ent:SetBodygroup( bodygroup.id, bodygroup.value )
+            entity:SetBodygroup( bodygroup.id, bodygroup.value )
         end
     elseif modelBodygroups ~= false then
         for _, bodygroup in ipairs( self:GetBodyGroups() ) do
-            ent:SetBodygroup( bodygroup.id, self:GetBodygroup( bodygroup.id ) )
+            entity:SetBodygroup( bodygroup.id, self:GetBodygroup( bodygroup.id ) )
         end
     end
 
     -- Flexes
-    ent:SetFlexScale( self:GetFlexScale() )
-    for flex = 1, ent:GetFlexNum() do
-        ent:SetFlexWeight( flex, self:GetFlexWeight( flex ) )
+    entity:SetFlexScale( self:GetFlexScale() )
+    for flex = 1, entity:GetFlexNum() do
+        entity:SetFlexWeight( flex, self:GetFlexWeight( flex ) )
     end
 
     -- Material
-    ent:SetMaterial( self:GetMaterial() )
+    entity:SetMaterial( self:GetMaterial() )
 
     -- Sub-materials
-    for index in ipairs( ent:GetMaterials() ) do
+    for index in ipairs( entity:GetMaterials() ) do
         local materialPath = self:GetSubMaterial( index )
         if materialPath ~= "" then
-            ent:SetSubMaterial( index, materialPath )
+            entity:SetSubMaterial( index, materialPath )
         end
     end
 
     -- Color
-    ent:SetPlayerColor( self:GetPlayerColor() )
-    ent:SetColor( self:GetColor() )
+    entity:SetPlayerColor( self:GetPlayerColor() )
+    entity:SetColor( self:GetColor() )
 
     -- Spawning
-    ent:Spawn()
+    entity:Spawn()
 
     -- Collision group
-    ent:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
+    entity:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
 
     -- Network tags
-    self:SetNW2Entity( "improved-player-ragdolls", ent )
-    ent:SetNWBool( "improved-player-ragdolls", true )
-    ent:SetCreator( self )
+    self:SetNW2Entity( packageName, entity )
+    entity:SetNW2Entity( packageName, self )
+    entity:SetCreator( self )
 
     -- Bone manipulations
-    for boneID = 0, ent:GetBoneCount() do
-        ent:ManipulateBonePosition( boneID, self:GetManipulateBonePosition( boneID ) )
-        ent:ManipulateBoneAngles( boneID, self:GetManipulateBoneAngles( boneID ) )
-        ent:ManipulateBoneJiggle( boneID, self:GetManipulateBoneJiggle( boneID ) )
-        ent:ManipulateBoneScale( boneID, self:GetManipulateBoneScale( boneID ) )
+    for boneID = 0, entity:GetBoneCount() do
+        entity:ManipulateBonePosition( boneID, self:GetManipulateBonePosition( boneID ) )
+        entity:ManipulateBoneAngles( boneID, self:GetManipulateBoneAngles( boneID ) )
+        entity:ManipulateBoneJiggle( boneID, self:GetManipulateBoneJiggle( boneID ) )
+        entity:ManipulateBoneScale( boneID, self:GetManipulateBoneScale( boneID ) )
     end
 
     -- Velocity
     local velocity = self:GetVelocity()
-    if ent:IsRagdoll() then
-        for physNum = 0, ent:GetPhysicsObjectCount() - 1 do
-            local phys = ent:GetPhysicsObjectNum( physNum )
+    if entity:IsRagdoll() then
+        for physNum = 0, entity:GetPhysicsObjectCount() - 1 do
+            local phys = entity:GetPhysicsObjectNum( physNum )
             if not IsValid( phys ) then continue end
 
-            local boneID = ent:TranslatePhysBoneToBone( physNum )
+            local boneID = entity:TranslatePhysBoneToBone( physNum )
             if boneID < 0 then continue end
 
             local pos, ang = self:GetBonePosition( boneID )
@@ -144,7 +144,7 @@ function PLAYER:CreateRagdoll()
             phys:Wake()
         end
     else
-        local phys = ent:GetPhysicsObject()
+        local phys = entity:GetPhysicsObject()
         if IsValid( phys ) then
             phys:SetVelocity( velocity )
             phys:Wake()
@@ -154,19 +154,19 @@ function PLAYER:CreateRagdoll()
     -- Fire transmission
     if self:IsOnFire() then
         self:Extinguish()
-        ent:Ignite( 32, 64 )
+        entity:Ignite( 32, 64 )
     end
 
     -- Hook for dev's
-    hook.Run( "PlayerRagdollCreated", self, ent )
+    hook.Run( "PlayerRagdollCreated", self, entity )
 
     -- Spectating :
     if not IsValid( self:GetObserverTarget() ) then
         self:SetObserverMode( OBS_MODE_CHASE )
-        self:SpectateEntity( ent )
+        self:SpectateEntity( entity )
     end
 
-    return ent
+    return entity
 end
 
 -- gmod_cameraprop ragdoll support
@@ -203,5 +203,3 @@ end )
 hook.Add( "DoPlayerDeath", packageName, function( ply, _, damageInfo )
     ply:SetVelocity( -damageInfo:GetDamageForce() )
 end )
-
-hook.Run( "IPR - Initialized" )
