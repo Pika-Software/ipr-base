@@ -24,7 +24,7 @@ function PLAYER:RemoveRagdoll()
     return entity:Remove()
 end
 
-hook.Add( "PlayerDisconnected", packageName, PLAYER.RemoveRagdoll )
+hook.Add( "PlayerDisconnected", "RemoveOnDisconnect", PLAYER.RemoveRagdoll )
 
 do
 
@@ -195,12 +195,12 @@ end )
 
 local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, "If 1, player ragdolls will be removed when the player is respawned.", 0, 1 )
 
-hook.Add( "PlayerSpawn", packageName, function( ply, _ )
+hook.Add( "PlayerSpawn", "RemoveOnSpawn", function( ply, _ )
     if not removeOnSpawn:GetBool() then return end
     ply:SpectateEntity( ply )
     ply:RemoveRagdoll()
 end )
 
-hook.Add( "DoPlayerDeath", packageName, function( ply, _, damageInfo )
+hook.Add( "DoPlayerDeath", "RemoveDamageVelocity", function( ply, _, damageInfo )
     ply:SetVelocity( -damageInfo:GetDamageForce() )
 end )
