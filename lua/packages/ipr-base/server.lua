@@ -196,9 +196,11 @@ end )
 local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, "If 1, player ragdolls will be removed when the player is respawned.", 0, 1 )
 
 hook.Add( "PlayerSpawn", "RemoveOnSpawn", function( ply, _ )
-    if not removeOnSpawn:GetBool() then return end
+    if removeOnSpawn:GetBool() then
+        ply:RemoveRagdoll()
+    end
+
     ply:SpectateEntity( ply )
-    ply:RemoveRagdoll()
 end )
 
 hook.Add( "DoPlayerDeath", "RemoveDamageVelocity", function( ply, _, damageInfo )

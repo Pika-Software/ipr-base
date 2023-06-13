@@ -1,3 +1,3 @@
 name = "ipr-base"
-version = 000503
+version = 000504
 autorun = true
