@@ -197,6 +197,7 @@ local removeOnSpawn = CreateConVar( "ipr_remove_on_spawn", "1", FCVAR_ARCHIVE, "
 
 hook.Add( "PlayerSpawn", packageName, function( ply, _ )
     if not removeOnSpawn:GetBool() then return end
+    ply:SpectateEntity( ply )
     ply:RemoveRagdoll()
 end )
 
