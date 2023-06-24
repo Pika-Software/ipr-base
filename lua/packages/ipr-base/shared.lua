@@ -6,7 +6,7 @@ do
 
     -- Entity:IsPlayerRagdoll()
     function ENTITY:IsPlayerRagdoll()
-        return self:GetNW2String( "IPR - SteamID64" ) ~= nil
+        return self:GetNW2String( "ragdoll-owner" ) ~= nil
     end
 
     -- Player:GetRagdollOwner()
@@ -17,7 +17,7 @@ do
         local IsValid = IsValid
 
         function ENTITY:GetRagdollOwner()
-            local steamid = self:GetNW2String( "IPR - SteamID64" )
+            local steamid = self:GetNW2String( "ragdoll-owner" )
             if steamid then
                 local entity = player_GetBySteamID64( steamid )
                 if IsValid( entity ) then
@@ -38,7 +38,7 @@ do
     local PLAYER = FindMetaTable( "Player" )
 
     function PLAYER:GetRagdollEntity()
-        return self:GetNW2Entity( "IPR - Ragdoll" )
+        return self:GetNW2Entity( "ragdoll" )
     end
 
 end

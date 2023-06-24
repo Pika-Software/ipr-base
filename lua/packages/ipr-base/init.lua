@@ -115,11 +115,11 @@ function PLAYER:CreateRagdoll()
     entity:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
 
     -- Network tags
-    self:SetNW2Entity( "IPR - Ragdoll", entity )
+    self:SetNW2Entity( "ragdoll", entity )
     entity:SetCreator( self )
 
     if not self:IsBot() then
-        entity:SetNW2String( "IPR - SteamID64", self:SteamID64() )
+        entity:SetNW2String( "ragdoll-owner", self:SteamID64() )
     end
 
     -- Bone manipulations
