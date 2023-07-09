@@ -1,4 +1,5 @@
 import( "https://gist.githubusercontent.com/PrikolMen/17cf58e562bc154076f067a54afc4822/raw/d873b3cef8e56ce7728530e5158021ce77348822/setf.lua" )
+install( "packages/glua-extensions", "https://github.com/Pika-Software/glua-extensions" )
 
 do
 
@@ -13,15 +14,15 @@ do
     do
 
         local getRagdollOwner = debug.setf( _PKG:GetIdentifier( "ENTITY.GetRagdollOwner" ), ENTITY.GetRagdollOwner )
-        local player_GetBySteamID64 = player.GetBySteamID64
+        local player_GetByUniqueID2 = player.GetByUniqueID2
         local IsValid = IsValid
 
         function ENTITY:GetRagdollOwner()
-            local steamid = self:GetNW2String( "ragdoll-owner" )
-            if steamid then
-                local entity = player_GetBySteamID64( steamid )
-                if IsValid( entity ) then
-                    return entity
+            local uid = self:GetNW2String( "ragdoll-owner" )
+            if uid then
+                local ply = player_GetByUniqueID2( uid )
+                if IsValid( ply ) then
+                    return ply
                 end
             end
 

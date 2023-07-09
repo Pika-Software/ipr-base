@@ -117,10 +117,7 @@ function PLAYER:CreateRagdoll()
     -- Network tags
     self:SetNW2Entity( "ragdoll", entity )
     entity:SetCreator( self )
-
-    if not self:IsBot() then
-        entity:SetNW2String( "ragdoll-owner", self:SteamID64() )
-    end
+    entity:SetNW2String( "ragdoll-owner", self:UniqueID2() )
 
     -- Bone manipulations
     for boneID = 0, entity:GetBoneCount() do
@@ -210,7 +207,7 @@ hook.Add( "DoPlayerDeath", "RemoveDamageVelocity", function( ply, _, damageInfo 
     ply:SetVelocity( -damageInfo:GetDamageForce() )
 end )
 
-hook.Add( "PlayerUse", "+use", function( ply, entity )
+hook.Add( "PlayerUse", "Usage", function( ply, entity )
     if not entity:IsPlayerRagdoll() then return end
     hook.Run( "PlayerRagdollUsed", entity, ply )
 end )

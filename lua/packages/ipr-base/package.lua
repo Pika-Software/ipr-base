@@ -1,4 +1,4 @@
 name = "ipr-base"
-version = 000700
+version = 000800
 autorun = true
 init = "shared.lua"
