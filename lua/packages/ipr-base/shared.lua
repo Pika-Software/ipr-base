@@ -1,5 +1,5 @@
-import( "https://gist.githubusercontent.com/PrikolMen/17cf58e562bc154076f067a54afc4822/raw/d873b3cef8e56ce7728530e5158021ce77348822/setf.lua" )
 install( "packages/glua-extensions", "https://github.com/Pika-Software/glua-extensions" )
+install( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
 
 do
 
@@ -7,28 +7,13 @@ do
 
     -- Entity:IsPlayerRagdoll()
     function ENTITY:IsPlayerRagdoll()
-        return self:GetNW2String( "ragdoll-owner" ) ~= nil
+        return self:GetNW2Bool( "is-player-ragdoll", false )
     end
 
     -- Player:GetRagdollOwner()
-    do
-
-        local getRagdollOwner = debug.setf( _PKG:GetIdentifier( "ENTITY.GetRagdollOwner" ), ENTITY.GetRagdollOwner )
-        local player_GetByUniqueID2 = player.GetByUniqueID2
-        local IsValid = IsValid
-
-        function ENTITY:GetRagdollOwner()
-            local uid = self:GetNW2String( "ragdoll-owner" )
-            if uid then
-                local ply = player_GetByUniqueID2( uid )
-                if IsValid( ply ) then
-                    return ply
-                end
-            end
-
-            return getRagdollOwner( self )
-        end
-
+    function ENTITY:GetRagdollOwner()
+        if not self:IsPlayerRagdoll() then return end
+        return self:GetCreator()
     end
 
 end
@@ -37,15 +22,26 @@ end
 do
 
     local PLAYER = FindMetaTable( "Player" )
+    local packageName = _PKG:GetIdentifier()
+    local ents_GetAll = ents.GetAll
+    local ipairs = ipairs
 
     function PLAYER:GetRagdollEntity()
-        return self:GetNW2Entity( "ragdoll" )
+        local ragdoll = self[ packageName ]
+        if IsValid( ragdoll ) then
+            return ragdoll
+        end
+
+        local uid = self:UniqueID2()
+        for _, entity in ipairs( ents_GetAll() ) do
+            if not entity:IsPlayerRagdoll() then continue end
+            if entity:GetNW2String( "entity-owner" ) ~= uid then continue end
+            self[ packageName ] = entity
+            return entity
+        end
     end
 
 end
 
-if SERVER then
-    include( "init.lua" )
-end
-
-hook.Run( "IPR - Initialized" )
+if not SERVER then return end
+include( "init.lua" )

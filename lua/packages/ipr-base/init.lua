@@ -1,7 +1,3 @@
-install( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
-
--- Other
-local packageName = _PKG:GetIdentifier()
 local PLAYER = FindMetaTable( "Player" )
 
 -- Libraries
@@ -11,32 +7,29 @@ local util = util
 
 -- Variables
 local COLLISION_GROUP_PASSABLE_DOOR = COLLISION_GROUP_PASSABLE_DOOR
+local MOVETYPE_VPHYSICS = MOVETYPE_VPHYSICS
+local SOLID_VPHYSICS = SOLID_VPHYSICS
 local OBS_MODE_CHASE = OBS_MODE_CHASE
+local player_GetAll = player.GetAll
 local IsValid = IsValid
 local ipairs = ipairs
+local Model = Model
 local type = type
 
 function PLAYER:RemoveRagdoll()
     local entity = self:GetRagdollEntity()
-    if not IsValid( entity ) then return end
+    if IsValid( entity ) then
+        entity:Remove()
+    end
+end
 
-    hook.Run( "PlayerRagdollRemoved", self, entity )
-    return entity:Remove()
+function player.RemovePlayerRagdolls()
+    for _, ply in ipairs( player_GetAll() ) do
+        ply:RemoveRagdoll()
+    end
 end
 
 hook.Add( "PlayerDisconnected", "RemoveOnDisconnect", PLAYER.RemoveRagdoll )
-
-do
-
-    local player_GetAll = player.GetAll
-
-    function player.RemovePlayerRagdolls()
-        for _, ply in ipairs( player_GetAll() ) do
-            ply:RemoveRagdoll()
-        end
-    end
-
-end
 
 function PLAYER:CreateRagdoll()
     self:RemoveRagdoll()
@@ -62,7 +55,7 @@ function PLAYER:CreateRagdoll()
     local model = hook.Run( "PlayerRagdollModel", self, entity )
     if type( model ) == "string" then
         if not util.IsValidModel( model ) then return end
-        entity:SetModel( model )
+        entity:SetModel( Model( model ) )
     else
         entity:SetModel( self:GetModel() )
     end
@@ -108,16 +101,21 @@ function PLAYER:CreateRagdoll()
     entity:SetPlayerColor( self:GetPlayerColor() )
     entity:SetColor( self:GetColor() )
 
-    -- Spawning
-    entity:Spawn()
-
     -- Collision group
     entity:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
 
     -- Network tags
-    self:SetNW2Entity( "ragdoll", entity )
+    entity:SetNW2Bool( "is-player-ragdoll", true )
     entity:SetCreator( self )
-    entity:SetNW2String( "ragdoll-owner", self:UniqueID2() )
+
+    -- Spawning
+    entity:Spawn()
+
+    -- Physics
+    entity:SetMoveType( MOVETYPE_VPHYSICS )
+    entity:SetSolid( SOLID_VPHYSICS )
+    entity:PhysicsInit( SOLID_VPHYSICS )
+    entity:PhysWake()
 
     -- Bone manipulations
     for boneID = 0, entity:GetBoneCount() do
@@ -170,7 +168,8 @@ function PLAYER:CreateRagdoll()
 end
 
 -- gmod_cameraprop ragdoll support
-timer.Create( packageName, 0.5, 0, function()
+local packageName = _PKG:GetIdentifier()
+timer.Create( "gmod_cameraprop", 0.5, 0, function()
     for _, camera in ipairs( ents.FindByClass( "gmod_cameraprop" ) ) do
         local ply, target = camera[ packageName ], camera:GetentTrack()
 
@@ -180,14 +179,15 @@ timer.Create( packageName, 0.5, 0, function()
             if target:Alive() then continue end
 
             local ragdoll = target:GetRagdollEntity()
-            if not IsValid( ragdoll ) then continue end
-            camera:SetentTrack( ragdoll )
-            camera[ packageName ] = target
+            if IsValid( ragdoll ) then
+                camera:SetentTrack( ragdoll )
+                camera[ packageName ] = target
+            end
+
             continue
         end
 
         if not IsValid( ply ) then continue end
-        if not ply:Alive() then continue end
         camera:SetentTrack( ply )
         camera[ packageName ] = nil
     end
@@ -209,5 +209,5 @@ end )
 
 hook.Add( "PlayerUse", "Usage", function( ply, entity )
     if not entity:IsPlayerRagdoll() then return end
-    hook.Run( "PlayerRagdollUsed", entity, ply )
+    hook.Run( "PlayerRagdollUse", entity, ply )
 end )
