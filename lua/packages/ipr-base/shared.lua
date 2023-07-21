@@ -35,7 +35,11 @@ do
         local uid = self:UniqueID2()
         for _, entity in ipairs( ents_GetAll() ) do
             if not entity:IsPlayerRagdoll() then continue end
-            if entity:GetNW2String( "entity-owner" ) ~= uid then continue end
+
+            local ouid = entity:GetNW2Var( "entity-owner" )
+            if not ouid then continue end
+
+            if ouid ~= uid then continue end
             self[ packageName ] = entity
             return entity
         end
