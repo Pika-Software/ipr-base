@@ -86,20 +86,16 @@ function PLAYER:CreateRagdoll()
         entity:SetFlexWeight( flex, self:GetFlexWeight( flex ) )
     end
 
-    -- Material
+    -- Visual
     entity:SetMaterial( self:GetMaterial() )
+    entity:SetColor( self:GetColor() )
 
-    -- Sub-materials
     for index in ipairs( entity:GetMaterials() ) do
         local materialPath = self:GetSubMaterial( index )
         if materialPath ~= "" then
             entity:SetSubMaterial( index, materialPath )
         end
     end
-
-    -- Color
-    entity:SetPlayerColor( self:GetPlayerColor() )
-    entity:SetColor( self:GetColor() )
 
     -- Collision group
     entity:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
