@@ -1,5 +1,5 @@
-install( "packages/glua-extensions", "https://github.com/Pika-Software/glua-extensions" )
 install( "packages/player-extensions", "https://github.com/Pika-Software/player-extensions" )
+install( "packages/glua-extensions", "https://github.com/Pika-Software/glua-extensions" )
 
 do
 
@@ -47,5 +47,5 @@ do
 
 end
 
-if not SERVER then return end
+if CLIENT then return end
 include( "init.lua" )
