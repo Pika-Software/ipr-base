@@ -101,7 +101,8 @@ function PLAYER:CreateRagdoll()
     entity:SetCollisionGroup( COLLISION_GROUP_PASSABLE_DOOR )
 
     -- Network tags
-    entity:SetNW2Bool( "is-player-ragdoll", true )
+    self:SetNW2Entity( "player-ragdoll", entity )
+    entity:SetNW2Bool( "player-ragdoll", true )
     entity:SetCreator( self )
 
     -- Spawning
